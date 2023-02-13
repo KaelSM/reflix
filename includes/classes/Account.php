@@ -12,6 +12,8 @@ class Account {
         $this->validateName($fn);
         $this->validateName($ln);
         $this->validateUserName($un);
+        $this->validateEmail($em, $em2);
+
     }
 
     private function validateName($passedName) {
@@ -33,6 +35,34 @@ class Account {
         if ($query->rowCount() != 0)
         {
             array_push($this->errorArray, Constants::$userNameTaken);
+        }
+    }
+
+    private function validateEmail ($em, $em2)
+    {
+        if ($em != $em2){
+            array_push($this->errorArray, Constants::$emailError);
+            return;
+        }
+        if (!filter_var($em, FILTER_VALIDATE_EMAIL)){ //The fuilder would return false if is a false email
+            array_push($this->errorArray, Constants::$emailInvalid);
+            return;
+        }
+
+        $query = $this->con->prepare("SELECT * FROM users WHERE email=em");
+        $query->bindValue(":em", $em); //same as bind param but lets you use a value
+
+        $query->execute();
+        if ($query->rowCount() != 0)
+        {
+            array_push($this->errorArray, Constants::$emailTaken);
+        }
+    }
+
+    private function validatePwd ($pw, $pw2){
+        if ($pw != $pw2){
+            array_push($this->errorArray, Constants::$pwError);
+            return;
         }
     }
 
