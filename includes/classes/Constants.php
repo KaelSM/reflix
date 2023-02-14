@@ -1,19 +1,14 @@
 <?php
-    class Constants {
-        public static $nameCharacters = "Your first name or last name must be between 2 and 25 characters";
-        public static $userCharacters = "Your user name must be between 2 and 25 characters";
-        public static $userNameTaken = "User name taken";
-        public static $emailError = "Email does not match!";
-        public static $emailInvalid ="Email invalid, please enter a valid email";
-        public static $emailTaken = "User name taken";
-        public static $pwError = "Password does not match!";
-        public static $errorInvalidPwd = "Invalid password, needs to be 5 - 8 characters long";
-        public static $logInFail = "Your username or password is invalid";
-
-
-
-
-    }
-
-
+class Constants {
+    public static $firstNameCharacters = "Your first name must be between 2 and 25 characters";
+    public static $lastNameCharacters = "Your last name must be between 2 and 25 characters";
+    public static $usernameCharacters = "Your username must be between 2 and 25 characters";
+    public static $usernameTaken = "Username already in use";
+    public static $emailsDontMatch = "Your emails don't match";
+    public static $emailInvalid = "Invalid email";
+    public static $emailTaken = "Email already in use";
+    public static $passwordsDontMatch = "Passwords don't match";
+    public static $passwordLength = "Your password must be between 5 and 25 characters";
+    public static $loginFailed = "Your username or password was incorrect";
+}
 ?>

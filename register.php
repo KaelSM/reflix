@@ -15,27 +15,20 @@ require_once("includes/classes/Account.php");
         $email2 = FormSanitizer::sanitizeFormEmail($_POST["email2"]);
         $password = FormSanitizer::sanitizeFormPassword($_POST["password"]);
         $password2 = FormSanitizer::sanitizeFormPassword($_POST["password2"]);
+        
+        $success = $account->register($firstName, $lastName, $username, $email, $email2, $password, $password2);
 
-       $success = $account->register($firstName, $lastName, $username, $email, $email2, $password, $password2);
-
-       if ($success == true)
-       {
-        //store session
-        $_SESSION["userLoggedIn"] = $username; 
-         header ("Location: index.php");
-       }
-       else{
-        echo " error happened, try again";
-       }
-       
-
-    }
-
-    function getInputValue($name) {
-        if(isset($_POST[$name])) {
-            echo $_POST[$name];
+        if($success) {
+            $_SESSION["userLoggedIn"] = $username;
+            header("Location: index.php");
         }
     }
+
+function getInputValue($name) {
+    if(isset($_POST[$name])) {
+        echo $_POST[$name];
+    }
+}  
 ?>
 <!DOCTYPE html>
 <html>
@@ -57,23 +50,27 @@ require_once("includes/classes/Account.php");
 
                 <form method="POST">
 
-                    <?php echo $account->getError(Constants::$nameCharacters); ?>
+                    <?php echo $account->getError(Constants::$firstNameCharacters); ?>
                     <input type="text" name="firstName" placeholder="First name" value="<?php getInputValue("firstName"); ?>" required>
-                    <input type="text" name="lastName" placeholder="Last name" value="<?php getInputValue("lastname"); ?>" required>
 
-                    <?php echo $account->getError(Constants::$userCharacters); ?>
-                    <?php echo $account->getError(Constants::$userNameTaken); ?>
+                    <?php echo $account->getError(Constants::$lastNameCharacters); ?>
+                    <input type="text" name="lastName" placeholder="Last name" value="<?php getInputValue("lastName"); ?>" required>
+                    
+                    <?php echo $account->getError(Constants::$usernameCharacters); ?>
+                    <?php echo $account->getError(Constants::$usernameTaken); ?>
                     <input type="text" name="username" placeholder="Username" value="<?php getInputValue("username"); ?>" required>
 
-                    <?php echo $account->getError(Constants::$emailError); ?>
+                    <?php echo $account->getError(Constants::$emailsDontMatch); ?>
                     <?php echo $account->getError(Constants::$emailInvalid); ?>
                     <?php echo $account->getError(Constants::$emailTaken); ?>
                     <input type="email" name="email" placeholder="Email" value="<?php getInputValue("email"); ?>" required>
+
                     <input type="email" name="email2" placeholder="Confirm email" value="<?php getInputValue("email2"); ?>" required>
                     
-                    <?php echo $account->getError(Constants::$pwError); ?>
-                    <?php echo $account->getError(Constants::$errorInvalidPwd); ?>
+                    <?php echo $account->getError(Constants::$passwordsDontMatch); ?>
+                    <?php echo $account->getError(Constants::$passwordLength); ?>
                     <input type="password" name="password" placeholder="Password" required>
+
                     <input type="password" name="password2" placeholder="Confirm password" required>
 
                     <input type="submit" name="submitButton" value="SUBMIT">

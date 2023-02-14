@@ -8,108 +8,109 @@ class Account {
         $this->con = $con;
     }
 
-    public function register($fn, $ln, $un, $em, $em2, $pw, $pw2){
-        $this->validateName($fn);
-        $this->validateName($ln);
-        $this->validateUserName($un);
-        $this->validateEmail($em, $em2);
-        $this->validatePwd($pw, $pw2);
+    public function register($fn, $ln, $un, $em, $em2, $pw, $pw2) {
+        $this->validateFirstName($fn);
+        $this->validateLastName($ln);
+        $this->validateUsername($un);
+        $this->validateEmails($em, $em2);
+        $this->validatePasswords($pw, $pw2);
 
         if(empty($this->errorArray)) {
-            return $this->insertUserData($fn, $ln, $un, $em, $pw);
-        } else
-        {
-            return false;
+            return $this->insertUserDetails($fn, $ln, $un, $em, $pw);
         }
 
+        return false;
     }
 
-    public function logIn($un, $pw) {
+    public function login($un, $pw) {
         $pw = hash("sha512", $pw);
-        $query = $this->con->prepare("SELECT * FROM users WHERE username=:un AND password=:pw" );
-      
-        $query->bindValue(':un', $un);
-        $query->bindValue(':pw', $pw);
+
+        $query = $this->con->prepare("SELECT * FROM users WHERE username=:un AND password=:pw");
+        $query->bindValue(":un", $un);
+        $query->bindValue(":pw", $pw);
 
         $query->execute();
 
-        if ($query->rowCount()== 1)
-        {
+        if($query->rowCount() == 1) {
             return true;
-        } else
-        {
-            array_push($this->errorArray, Constants::$logInFail);
-            return false;
         }
+
+        array_push($this->errorArray, Constants::$loginFailed);
+        return false;
     }
 
-    private function insertUserData($fn, $ln, $un, $em, $pw) {
-
-        $pw = hash("sha512", $pw); //trasnforms into a string of # and letters so you cant tell what pw it was/is
-
-        $query = $this->con->prepare("INSERT INTO users (first_name, last_name, username, email, password)
-                                        VALUES (:fn, :ln, :un, :em, :pw)" );
-        $query->bindValue(':fn', $fn);
-        $query->bindValue(':ln', $ln);
-        $query->bindValue(':un', $un);
-        $query->bindValue(':em', $em);
-        $query->bindValue(':pw', $pw);
+    private function insertUserDetails($fn, $ln, $un, $em, $pw) {
+        
+        $pw = hash("sha512", $pw);
+        
+        $query = $this->con->prepare("INSERT INTO users (firstName, lastName, username, email, password)
+                                        VALUES (:fn, :ln, :un, :em, :pw)");
+        $query->bindValue(":fn", $fn);
+        $query->bindValue(":ln", $ln);
+        $query->bindValue(":un", $un);
+        $query->bindValue(":em", $em);
+        $query->bindValue(":pw", $pw);
 
         return $query->execute();
-
     }
 
-    private function validateName($passedName) {
-        if(strlen($passedName) < 2 || strlen($passedName) > 25) {
-            array_push($this->errorArray, Constants::$nameCharacters);
+    private function validateFirstName($fn) {
+        if(strlen($fn) < 2 || strlen($fn) > 25) {
+            array_push($this->errorArray, Constants::$firstNameCharacters);
         }
     }
 
-    private function validateUserName($un) {
+    private function validateLastName($ln) {
+        if(strlen($ln) < 2 || strlen($ln) > 25) {
+            array_push($this->errorArray, Constants::$lastNameCharacters);
+        }
+    }
+
+    private function validateUsername($un) {
         if(strlen($un) < 2 || strlen($un) > 25) {
-            array_push($this->errorArray, Constants::$userCharacters);
+            array_push($this->errorArray, Constants::$usernameCharacters);
             return;
         }
 
-        $query = $this->con->prepare("SELECT * FROM users WHERE username=un");
-        $query->bindValue(":un", $un); //same as bind param but lets you use a value
+        $query = $this->con->prepare("SELECT * FROM users WHERE username=:un");
+        $query->bindValue(":un", $un);
 
         $query->execute();
-        if ($query->rowCount() != 0)
-        {
-            array_push($this->errorArray, Constants::$userNameTaken);
+        
+        if($query->rowCount() != 0) {
+            array_push($this->errorArray, Constants::$usernameTaken);
         }
     }
 
-    private function validateEmail ($em, $em2)
-    {
-        if ($em != $em2){
-            array_push($this->errorArray, Constants::$emailError);
+    private function validateEmails($em, $em2) {
+        if($em != $em2) {
+            array_push($this->errorArray, Constants::$emailsDontMatch);
             return;
         }
-        if (!filter_var($em, FILTER_VALIDATE_EMAIL)){ //The fuilder would return false if is a false email
+
+        if(!filter_var($em, FILTER_VALIDATE_EMAIL)) {
             array_push($this->errorArray, Constants::$emailInvalid);
             return;
         }
 
-        $query = $this->con->prepare("SELECT * FROM users WHERE email=em");
-        $query->bindValue(":em", $em); //same as bind param but lets you use a value
+        $query = $this->con->prepare("SELECT * FROM users WHERE email=:em");
+        $query->bindValue(":em", $em);
 
         $query->execute();
-        if ($query->rowCount() != 0)
-        {
+        
+        if($query->rowCount() != 0) {
             array_push($this->errorArray, Constants::$emailTaken);
         }
     }
 
-    private function validatePwd ($pw, $pw2){
-        if ($pw != $pw2){
-            array_push($this->errorArray, Constants::$pwError);
+    private function validatePasswords($pw, $pw2) {
+        if($pw != $pw2) {
+            array_push($this->errorArray, Constants::$passwordsDontMatch);
             return;
         }
 
-        if(strlen($pw) < 5 || strlen($pw) > 12) {
-            array_push($this->errorArray, Constants::$errorInvalidPwd);
+        if(strlen($pw) < 5 || strlen($pw) > 25) {
+            array_push($this->errorArray, Constants::$passwordLength);
         }
     }
 
