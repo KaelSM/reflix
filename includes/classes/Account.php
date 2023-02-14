@@ -13,6 +13,49 @@ class Account {
         $this->validateName($ln);
         $this->validateUserName($un);
         $this->validateEmail($em, $em2);
+        $this->validatePwd($pw, $pw2);
+
+        if(empty($this->errorArray)) {
+            return $this->insertUserData($fn, $ln, $un, $em, $pw);
+        } else
+        {
+            return false;
+        }
+
+    }
+
+    public function logIn($un, $pw) {
+        $pw = hash("sha512", $pw);
+        $query = $this->con->prepare("SELECT * FROM users WHERE username=:un AND password=:pw" );
+      
+        $query->bindValue(':un', $un);
+        $query->bindValue(':pw', $pw);
+
+        $query->execute();
+
+        if ($query->rowCount()== 1)
+        {
+            return true;
+        } else
+        {
+            array_push($this->errorArray, Constants::$logInFail);
+            return false;
+        }
+    }
+
+    private function insertUserData($fn, $ln, $un, $em, $pw) {
+
+        $pw = hash("sha512", $pw); //trasnforms into a string of # and letters so you cant tell what pw it was/is
+
+        $query = $this->con->prepare("INSERT INTO users (first_name, last_name, username, email, password)
+                                        VALUES (:fn, :ln, :un, :em, :pw)" );
+        $query->bindValue(':fn', $fn);
+        $query->bindValue(':ln', $ln);
+        $query->bindValue(':un', $un);
+        $query->bindValue(':em', $em);
+        $query->bindValue(':pw', $pw);
+
+        return $query->execute();
 
     }
 
@@ -64,11 +107,15 @@ class Account {
             array_push($this->errorArray, Constants::$pwError);
             return;
         }
+
+        if(strlen($pw) < 5 || strlen($pw) > 12) {
+            array_push($this->errorArray, Constants::$errorInvalidPwd);
+        }
     }
 
     public function getError($error) {
         if(in_array($error, $this->errorArray)) {
-            return $error;
+            return "<span class='errorMessage'>$error</span>";
         }
     }
 
