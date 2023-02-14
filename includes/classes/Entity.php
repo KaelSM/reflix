@@ -8,7 +8,7 @@ class Entity {
             $this->sqlData = $input;
         }
         else {
-            $query = this->con->prepare("SELECT * FROM entities WHERE id=id");
+            $query = $this->con->prepare("SELECT * FROM entities WHERE id=id");
             $query->bindValue(':id', $input);
             $query->execute();
 

@@ -90,3 +90,21 @@ body {
     font-weight: 400;
     text-align: center;
 }
+
+.previewContainer {
+    position: relative;
+    display: flex;
+}
+
+.previewVideo,
+ .previewImage
+ {
+    width: 100%;
+ }
+
+ .previewOverlay {
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0, 0.3);
+    position: absolute;
+ }
