@@ -5,7 +5,10 @@ require_once("includes/classes/CategoryContainers.php");
 require_once("includes/classes/Entity.php");
 require_once("includes/classes/EntityProvider.php");
 require_once("includes/classes/errorMessage.php");
-require_once("includes/SeasonProvider.php");
+require_once("includes/classes/SeasonsProvider.php");
+require_once("includes/classes/Season.php");
+require_once("includes/classes/Video.php");
+
 
 
 
