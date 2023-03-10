@@ -4,6 +4,10 @@ require_once("includes/classes/PreviewProvider.php");
 require_once("includes/classes/CategoryContainers.php");
 require_once("includes/classes/Entity.php");
 require_once("includes/classes/EntityProvider.php");
+require_once("includes/classes/errorMessage.php");
+require_once("includes/SeasonProvider.php");
+
+
 
 
 if(!isset($_SESSION["userLoggedIn"])) {
