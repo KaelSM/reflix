@@ -8,6 +8,7 @@ require_once("includes/classes/errorMessage.php");
 require_once("includes/classes/SeasonsProvider.php");
 require_once("includes/classes/Season.php");
 require_once("includes/classes/Video.php");
+require_once("includes/classes/VideoProvider.php");
 
 
 

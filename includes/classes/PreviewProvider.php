@@ -8,6 +8,36 @@ class PreviewProvider {
         $this->username = $username;
     }
 
+    public function createCategoryPreviewVideo($categoryId) {
+        $entitiesArray = EntityProvider::getEntities($this->con, $categoryId, 1);
+
+        if(sizeof($entitiesArray) == 0) {
+            ErrorMessage::show("No TV shows to display");
+        }
+
+        return $this->createPreviewVideo($entitiesArray[0]);
+    }
+
+    public function createTVShowPreviewVideo() {
+        $entitiesArray = EntityProvider::getTVShowEntities($this->con, null, 1);
+
+        if(sizeof($entitiesArray) == 0) {
+            ErrorMessage::show("No TV shows to display");
+        }
+
+        return $this->createPreviewVideo($entitiesArray[0]);
+    }
+
+    public function createMoviesPreviewVideo() {
+        $entitiesArray = EntityProvider::getMoviesEntities($this->con, null, 1);
+
+        if(sizeof($entitiesArray) == 0) {
+            ErrorMessage::show("No movies to display");
+        }
+
+        return $this->createPreviewVideo($entitiesArray[0]);
+    }
+
     public function createPreviewVideo($entity) {
         
         if($entity == null) {
@@ -19,7 +49,14 @@ class PreviewProvider {
         $preview = $entity->getPreview();
         $thumbnail = $entity->getThumbnail();
 
-        // TODO: ADD SUBTITLE
+        $videoId = VideoProvider::getEntityVideoForUser($this->con, $id, $this->username);
+        $video = new Video($this->con, $videoId);
+        
+        $inProgress = $video->isInProgress($this->username);
+        $playButtonText = $inProgress ? "Continue watching" : "Play";
+
+        $seasonEpisode = $video->getSeasonAndEpisode();
+        $subHeading = $video->isMovie() ? "" : "<h4>$seasonEpisode</h4>";
 
         return "<div class='previewContainer'>
 
@@ -33,9 +70,9 @@ class PreviewProvider {
                         
                         <div class='mainDetails'>
                             <h3>$name</h3>
-
+                            $subHeading
                             <div class='buttons'>
-                                <button><i class='fas fa-play'></i> Play</button>
+                                <button onclick='watchVideo($videoId)'><i class='fas fa-play'></i> $playButtonText</button>
                                 <button onclick='volumeToggle(this)'><i class='fas fa-volume-mute'></i></button>
                             </div>
 
@@ -47,7 +84,7 @@ class PreviewProvider {
 
     }
 
-    public function createEntityPreviewSquare($entity){
+    public function createEntityPreviewSquare($entity) {
         $id = $entity->getId();
         $thumbnail = $entity->getThumbnail();
         $name = $entity->getName();
