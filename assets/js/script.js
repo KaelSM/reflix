@@ -30,6 +30,7 @@ function startHideTimer() {
 
 function initVideo(videoId, username) {
     startHideTimer();
+    setStartTime(videoId, username);
     updateProgressTimer(videoId, username);
 }
 
@@ -40,10 +41,11 @@ function updateProgressTimer(videoId, username) {
     $("video").on("playing"), function(event){
         window.clearInterval(timer);
         timer = window.setInterval(function (){
-            console.log("hi");
+            updateProgress(videoId, username, event.target.currentTime);
         }, 3000);
     }
     .on("ended", function() {
+        setFinished(videoId, username);
         window.clearInterval(timer);
     })
 }
@@ -53,5 +55,36 @@ function addDuration(videoId, username) {
         if(data !== null && data !== "") {
             alert(data);
         }
+    })
+}
+
+function updateProgress(videoId, username, progress) {
+    $.post("ajax/updateDuration.php", { videoId: videoId, username: username, progress: progress }, function(data) {
+        if(data !== null && data !== "") {
+            alert(data);
+        }
+    })
+}
+
+function setFinished(videoId, username) {
+    $.post("ajax/setFinished.php", { videoId: videoId, username: username }, function(data) {
+        if(data !== null && data !== "") {
+            alert(data);
+        }
+    })
+}
+
+function setStartTime(videoId, username) {
+    $.post("ajax/getProgress.php", { videoId: videoId, username: username }, function(data) {
+        if(isNaN(data)) { //isNaN stands for is not a null
+            alert(data);
+            return;
+        }
+
+        $("video").on("canplay", function()
+        {
+            this.currentTime = data;
+            $("video").off("canplay");
+        })
     })
 }
