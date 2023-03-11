@@ -18,6 +18,7 @@ if(!isset($_SESSION["userLoggedIn"])) {
     header("Location: register.php");
 }
 
+
 $userLoggedIn = $_SESSION["userLoggedIn"];
 ?>
 <!DOCTYPE html>
@@ -34,9 +35,8 @@ $userLoggedIn = $_SESSION["userLoggedIn"];
         <div class='wrapper'>
 
 <?php
-
-    if(isset($hideNav)) {
-        include_once("includes/navBar.php");
-    }
+if(!isset($hideNav)) {
+    include_once("includes/navBar.php");
+}
 ?>
       
