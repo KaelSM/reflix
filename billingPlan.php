@@ -28,8 +28,8 @@ $returnUrl = str_replace("billing.php", "profile.php", $currentUrl);
 
 // Set merchant preferences
 $merchantPreferences = new MerchantPreferences();
-$merchantPreferences->setReturnUrl($currentUrl . "?success=true")
-  ->setCancelUrl($currentUrl . "?success=false")
+$merchantPreferences->setReturnUrl($returnUrl . "?success=true")
+  ->setCancelUrl($returnUrl . "?success=false")
   ->setAutoBillAmount('yes')
   ->setInitialFailAmountAction('CONTINUE')
   ->setMaxFailAttempts('0');
