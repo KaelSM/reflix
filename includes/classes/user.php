@@ -13,17 +13,19 @@ class User {
     }
 
     public function getFirstName() {
-        return $this->sqlData["first_name"];
+        return $this->sqlData["firstName"];
     }
 
     public function getLastName() {
-        return $this->sqlData["last_name"];
+        return $this->sqlData["lastName"];
     }
 
     public function getEmail() {
         return $this->sqlData["email"];
     }
 
-    
+    public function getIsSubscribed() {
+        return $this->sqlData["is_subscribed"];
+    }
 }
 ?>
