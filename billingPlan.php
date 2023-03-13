@@ -32,7 +32,9 @@ $merchantPreferences->setReturnUrl($returnUrl . "?success=true")
   ->setCancelUrl($returnUrl . "?success=false")
   ->setAutoBillAmount('yes')
   ->setInitialFailAmountAction('CONTINUE')
-  ->setMaxFailAttempts('0');
+  ->setMaxFailAttempts('0')
+  ->setSetupFee(new Currency(array('value' => 9.99, 'currency' => 'CAD')));
+  
 
 $plan->setPaymentDefinitions(array($paymentDefinition));
 $plan->setMerchantPreferences($merchantPreferences);

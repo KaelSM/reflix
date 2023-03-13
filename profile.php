@@ -1,12 +1,14 @@
 <?php
 
 require_once("includes/header.php");
+require_once("includes/paypalConfig.php");
 require_once("includes/classes/Account.php");
 require_once("includes/classes/FormSanitizer.php");
 require_once("includes/classes/Constants.php");
 
 $detailsMessage = "";
 $passwordMessage = "";
+$subscriptionMessage = "";
 
 if (isset($_POST["saveDetailsButton"])) {
     $account = new Account($con);
@@ -57,6 +59,32 @@ if (isset($_POST["savePasswordButton"])) {
 
     
 }
+
+if (isset($_GET['success']) && $_GET['success'] == 'true') {
+    $token = $_GET['token'];
+    $agreement = new \PayPal\Api\Agreement();
+  
+    try {
+      // Execute agreement
+      $agreement->execute($token, $apiContext);
+
+      // Update user's account status
+
+    } catch (PayPal\Exception\PayPalConnectionException $ex) {
+      echo $ex->getCode();
+      echo $ex->getData();
+      die($ex);
+    } catch (Exception $ex) {
+      die($ex);
+    }
+  } 
+  else if (isset($_GET['success']) && $_GET['success'] == 'false') {
+    $subscriptionMessage = "<div class='alertError'>
+                            User cancelled or something went wrong!
+                        </div> ";
+  } 
+
+?>
 
 ?>
 
@@ -114,7 +142,9 @@ if (isset($_POST["savePasswordButton"])) {
 
     <div class="formSection">
         <h2>Subscription</h2>
-
+        <div class="message">
+                <?php echo $subscriptionMessage ?>
+            </div>
         <?php
 
         if($user->getIsSubscribed()) {

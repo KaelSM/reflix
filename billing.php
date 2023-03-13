@@ -13,7 +13,7 @@ use PayPal\Api\ShippingAddress;
 $agreement = new Agreement();
 $agreement->setName('Subscription to Reflix')
   ->setDescription('Recurring payments to Reflix')
-  ->setStartDate(gmdate("Y-m-d\TH:i:s\Z", strtotime("+15 days", time())));
+  ->setStartDate(gmdate("Y-m-d\TH:i:s\Z", strtotime("+1 month", time())));
 
 // Set plan id
 $plan = new Plan();
