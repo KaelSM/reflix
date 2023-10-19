@@ -43,7 +43,7 @@ Before you begin, ensure you have met the following requirements:
 1. To start the server, execute the following command in the project directory:
    ```
    npm start
-  ```
+   ```
 2. Open your web browser and visit `http://localhost:3000`.
 
 3. Enjoy streaming your favorite content!
