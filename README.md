@@ -1,5 +1,8 @@
 # Reflix
 
+![reeflix](https://github.com/KaelSM/reflix/assets/113145289/01259942-71d5-49bc-84c4-82b763740ad7)
+
+
 Welcome to Reflix, your go-to platform for streaming your favorite movies and TV shows. With Reflix, you can enjoy unlimited access to a vast library of content. Dive into new worlds, embark on epic adventures, and enjoy heartwarming moments, all at your convenience.
 
 ## Features
